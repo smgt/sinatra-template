@@ -1,7 +1,9 @@
 require "bundler"
 Bundler.require
-require "sinatra/reloader" if development?
-require "better_errors"
+if development?
+  require "sinatra/reloader"
+  require "better_errors"
+end
 
 class App < Sinatra::Base
 
