@@ -1,6 +1,11 @@
 $: << File.dirname(File.expand_path(__FILE__))
-require "bundler"
-Bundler.require
 require "lib/app"
 
-run App
+map '/assets' do
+  puts "assets"
+  run App::Base.sprockets
+end
+
+map '/' do
+  run App::Base
+end

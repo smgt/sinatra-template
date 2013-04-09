@@ -1,26 +1,46 @@
-if development?
-  require "sinatra/reloader"
-  require "better_errors"
-end
+$: << File.dirname(File.expand_path(__FILE__))
+require "bundler"
+Bundler.setup
+require "sinatra/base"
+require "sprockets"
+require "app/asset_helpers"
 
-class App < Sinatra::Base
+module App
+  class Base < Sinatra::Base
 
-  configure :development, :production do
-    enable :logging
-    set :server, :puma
-  end
+    set :root, File.expand_path('../../', __FILE__)
+    set :sprockets, ::Sprockets::Environment.new(root)
 
-  configure :development do
-    register Sinatra::Reloader
-    use BetterErrors::Middleware
-    BetterErrors.application_root = File.expand_path("..", __FILE__)
-  end
+    configure do
+      enable :logging
+      set :server, :puma
+      AssetHelpers.configure! sprockets, root
+      puts sprockets.inspect
+    end
 
-  get "/" do
-    "Hello World"
-  end
+    configure :production do
+      sprockets.js_compressor = :uglifier
+      sprockets.css_compressor = :sass
+    end
 
-  get "/error" do
-    raise
+    configure :development do
+      require "sinatra/reloader"
+      require "better_errors"
+      register Sinatra::Reloader
+      use BetterErrors::Middleware
+      BetterErrors.application_root = File.expand_path("..", __FILE__)
+    end
+
+    helpers do
+      include App::AssetHelpers
+    end
+
+    get "/" do
+      erb :index
+    end
+
+    get "/error" do
+      raise
+    end
   end
 end
