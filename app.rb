@@ -1,5 +1,3 @@
-require "bundler"
-Bundler.require
 if development?
   require "sinatra/reloader"
   require "better_errors"
