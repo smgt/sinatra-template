@@ -17,7 +17,6 @@ module App
       enable :logging
       set :server, :puma
       AssetHelpers.configure! sprockets, root
-      puts sprockets.inspect
     end
 
     configure :production do
