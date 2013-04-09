@@ -2,6 +2,8 @@ $: << File.dirname(File.expand_path(__FILE__))
 require "bundler"
 Bundler.setup
 require "sinatra/base"
+require "sass"
+require "coffee_script"
 require "sprockets"
 require "app/asset_helpers"
 
